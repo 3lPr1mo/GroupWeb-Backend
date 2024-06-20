@@ -6,7 +6,7 @@ export class Products {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ type: 'longblob' })
-  image: Buffer;
+  image: Buffer | string;
   @Column({ type: 'varchar', length: 255 })
   title: string;
   @Column({ type: 'text' })
