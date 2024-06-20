@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/users.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
+import { LoginUser } from '../dto/loginUser';
 
 @Injectable()
 export class ServicesService {
@@ -21,6 +22,16 @@ export class ServicesService {
 
     async getUserByEmail(email: string): Promise<User> {
         return await this.userRepository.findOneBy({email})
+    }
+
+    async loginUser(userData: LoginUser): Promise<Boolean> {
+        const {email, password} = userData;
+        const userFound = await this.userRepository.findOneBy({email});
+        const isValid = await bcrypt.compare(password, userFound.password);
+        if(!isValid){
+            throw new ForbiddenException('Invalid Credentials')
+        }
+        return true;
     }
 
     async createUser(userData: Partial<User>): Promise<User> {

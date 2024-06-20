@@ -1,6 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
 import { ServicesService } from '../services/services.service';
 import { User } from '../entities/users.entity';
+import { LoginUser } from '../dto/loginUser';
+import { Response } from 'express';
 
 @Controller('user')
 export class ControllersController {
@@ -24,6 +26,16 @@ export class ControllersController {
     @Post()
     async createUser(@Body() userData: Partial<User>): Promise<User> {
         return await this.userService.createUser(userData);
+    }
+
+    @Post('login')
+    async loginUser(@Body() userData: LoginUser, @Res() res: Response) {
+        try{
+            const a = await this.userService.loginUser(userData)
+            return res.status(HttpStatus.OK).json({ message: 'Login successful', user: a });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({message: 'Invalid Credentials'});
+        }
     }
 
     @Put(':id')
