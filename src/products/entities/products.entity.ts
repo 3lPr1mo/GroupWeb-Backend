@@ -5,8 +5,8 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 export class Products {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'longblob' })
-  image: Buffer | string;
+  @Column({ type: 'varchar', length: 250 })
+  image: string;
   @Column({ type: 'varchar', length: 255 })
   title: string;
   @Column({ type: 'text' })
