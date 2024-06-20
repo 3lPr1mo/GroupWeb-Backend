@@ -18,11 +18,6 @@ export class ProductServices {
 
     async getAllProducts(): Promise<Products[]>{
         const products = await this.productRepository.find();
-        /*products.forEach(product => {
-            if (product.image instanceof Buffer) {
-                product.image = product.image.toString('base64');
-            }
-        })*/
         return products;
     }
 
@@ -30,18 +25,6 @@ export class ProductServices {
         const product = await this.productRepository.findOneBy({id});
         return product;
     }
-
-    /*
-        async getProductById(id: number): Promise<{product: Products, imageStream: ReadStream} | null>{
-        const product = await this.productRepository.findOneBy({id});
-        if(!product){
-            throw new NotFoundException('Product not found');
-        }
-            const fullImagePath = join(process.cwd(), product.image);
-            const imageStream = createReadStream(fullImagePath);
-            return {product, imageStream};
-        }
-    */
 
     async getProductWithImage(id: number): Promise<{product: Products, imageStream: ReadStream}> {
         const product = await this.productRepository.findOneBy({id});
@@ -82,8 +65,6 @@ export class ProductServices {
         if(categoryId){
             product.category = await this.categoryRepository.findOneBy({id: categoryId})
         }
-
-        console.log(product)
 
         return await this.productRepository.save(product);
     }

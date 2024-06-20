@@ -57,7 +57,6 @@ export class ServicesService {
         if(userId){
           category.user = await this.userRepository.findOneBy({id: userId})
         }
-        console.log(category)
         //return await this.categoryRepository.save(category);
         return await this.categoryRepository.update(id,category);
       }

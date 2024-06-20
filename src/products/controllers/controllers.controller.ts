@@ -32,7 +32,6 @@ export class ControllersController {
             return res.status(404).send('Product not found')
         }
         const {product, imageStream} = productWithImage;
-        console.log(imageStream)
         res.setHeader('Content-Type', 'image/png')
         imageStream.pipe(res)
     }
@@ -52,8 +51,6 @@ export class ControllersController {
         @Body() productData: CreateProduct,
         @UploadedFile() file: Express.Multer.File
     ): Promise<Products> {
-        console.log("asdasdasdasdasdasdasdasdasdasdasd")
-        console.log(file)
         return await this.productService.createProduct(productData, file);
     }
 
