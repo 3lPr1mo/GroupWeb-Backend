@@ -14,7 +14,7 @@ export class Products {
   @Column({ type: 'varchar', length: 255 })
   colors: string;
   @Column({ type: 'varchar', length: 50 })
-  price: number;
+  price: number | string;
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 }
