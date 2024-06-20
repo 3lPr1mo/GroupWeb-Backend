@@ -1,10 +1,11 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Products {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'varchar', length: 255 })
-  image: string;
+  @Column({ type: 'longblob' })
+  image: Buffer;
   @Column({ type: 'varchar', length: 255 })
   title: string;
   @Column({ type: 'text' })
