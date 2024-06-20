@@ -2,7 +2,7 @@
     "version": 2,
     "env": {
         "DB_HOST":"groupmss.com",
-        "DB_PORT": 3306,
+        "DB_PORT": "3306",
         "DB_USER": "Franz",
         "DB_PASSWORD": "Franz2024zzz",
         "DB_NAME": "GroupWeb"
