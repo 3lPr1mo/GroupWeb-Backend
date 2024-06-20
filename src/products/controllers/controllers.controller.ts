@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, InternalServerErrorException, NotFoundException, Param, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ProductServices } from '../services/services.service';
 import { Products } from '../entities/products.entity';
 import { CreateProduct } from '../dto/CreateProduct';
@@ -6,6 +6,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { existsSync } from 'fs';
+import { NotFoundError } from 'rxjs';
 
 @Controller('product')
 export class ControllersController {
@@ -25,15 +27,17 @@ export class ControllersController {
 
     @Get(':id/image')
     async getProductImage(@Param('id') id: number, @Res() res: Response) {
-        //const productWithImage = await this.productService.getImagePath(id)
-        //const imageStream = this.productService.getImageStream(productWithImage);
-        const productWithImage = await this.productService.getProductWithImage(id)
-        if(!productWithImage){
-            return res.status(404).send('Product not found')
+        try{
+            const productWithImage = await this.productService.getProductWithImage(id)
+            if(!productWithImage){
+                return res.status(404).send('Product not found')
+            }
+            const {product, imageStream} = productWithImage;
+            res.setHeader('Content-Type', 'image/png')
+            imageStream.pipe(res)
+        } catch(error) {
+            throw new NotFoundException()
         }
-        const {product, imageStream} = productWithImage;
-        res.setHeader('Content-Type', 'image/png')
-        imageStream.pipe(res)
     }
 
     @Post()

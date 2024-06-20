@@ -1,11 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Products } from '../entities/products.entity';
 import { Repository } from 'typeorm';
 import { Category } from 'src/category/entities/category.entity';
 import { CreateProduct } from '../dto/CreateProduct';
 import { join } from 'path';
-import { createReadStream, ReadStream } from 'fs';
+import { createReadStream, existsSync, ReadStream } from 'fs';
 
 @Injectable()
 export class ProductServices {
@@ -26,14 +26,18 @@ export class ProductServices {
         return product;
     }
 
-    async getProductWithImage(id: number): Promise<{product: Products, imageStream: ReadStream}> {
+    async getProductWithImage(id: number): Promise<{product: Products, imageStream: ReadStream}|null> {
         const product = await this.productRepository.findOneBy({id});
         if(!product){
             throw new NotFoundException('Product not found');
         }
         const fullImagePath = join(process.cwd(), product.image);
+        const imageExist = existsSync(fullImagePath)
+        if(!imageExist) {
+            throw new NotFoundException('Image not found')
+        }
         const imageStream = createReadStream(fullImagePath);
-        return {product, imageStream};
+        return {product, imageStream}; 
     }
 
     async getImagePath(id: number): Promise<string | null>{
