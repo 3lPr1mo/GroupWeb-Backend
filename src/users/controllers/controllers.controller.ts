@@ -30,9 +30,11 @@ export class ControllersController {
 
     @Post('login')
     async loginUser(@Body() userData: LoginUser, @Res() res: Response) {
+        console.log()
         try{
+            console.log(userData)
             const a = await this.userService.loginUser(userData)
-            return res.status(HttpStatus.OK).json({ message: 'Login successful', user: a });
+            return res.status(HttpStatus.OK).json({ message: 'Login successful' });
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({message: 'Invalid Credentials'});
         }

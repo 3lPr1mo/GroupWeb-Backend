@@ -7,7 +7,7 @@ import { Divisions } from 'src/divisions/entities/divisions.entity';
 import { CreateCategory } from '../dto/CreateCategory';
 
 @Injectable()
-export class ServicesService {
+export class CategoryService {
     constructor(
         @InjectRepository(Category)
         private readonly categoryRepository: Repository<Category>,

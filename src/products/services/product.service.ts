@@ -6,6 +6,7 @@ import { Category } from 'src/category/entities/category.entity';
 import { CreateProduct } from '../dto/CreateProduct';
 import { join } from 'path';
 import { createReadStream, existsSync, ReadStream } from 'fs';
+import { Divisions } from 'src/divisions/entities/divisions.entity';
 
 @Injectable()
 export class ProductServices {
@@ -13,17 +14,43 @@ export class ProductServices {
         @InjectRepository(Products) 
         private readonly productRepository: Repository<Products>,
         @InjectRepository(Category)
-        private readonly categoryRepository: Repository<Category>
+        private readonly categoryRepository: Repository<Category>,
+        @InjectRepository(Divisions)
+        private readonly divisionRepository: Repository<Divisions>
     ){}
 
     async getAllProducts(): Promise<Products[]>{
-        const products = await this.productRepository.find();
+        const products = await this.productRepository.find({relations: ['category']});
         return products;
     }
 
     async getProductById(id: number): Promise<Products>{
-        const product = await this.productRepository.findOneBy({id});
+        const product = await this.productRepository.findOne({where: {id}, relations: ['category']});
         return product;
+    }
+
+    async getProductsByCategory(id: number): Promise<Products[]>{
+        const products = await this.productRepository.find({where: {category: {id}}, relations: ['category']});
+        return products;
+    }
+
+    async getProductByDivision(id: number): Promise<Products[]> {
+        return await this.productRepository.find({where: {category: {division: {id}}}, order:{id: "DESC"}})
+    }
+
+    async getLastProductsByDivision(): Promise<Products[]> {
+        const techProducts = await this.productRepository.find({where: {category: {division: {id: 1}}}, order: {id: "DESC"}, take: 2});
+        const fincaProducts = await this.productRepository.find({where: {category: {division: {id: 2}}}, order: {id: "DESC"}, take: 1});
+        const compraProducts = await this.productRepository.find({where: {category: {division: {id: 3}}}, order: {id: "DESC"}, take: 1});
+
+        const products = [...techProducts, ...fincaProducts, ...compraProducts]
+        
+        if(products.length === 0){
+            throw new NotFoundException('Product not found')
+        }
+
+        return products;
+
     }
 
     async getProductWithImage(id: number): Promise<{product: Products, imageStream: ReadStream}|null> {
@@ -44,7 +71,7 @@ export class ProductServices {
         const product = await this.productRepository.findOneBy({id})
         if (!product) {
             throw new NotFoundException('Product not found');
-          }
+        }
         return product.image;
     }
 

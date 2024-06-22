@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Divisions } from '../entities/divisions.entity';
-import { ServicesService } from '../services/services.service';
+import { DivisionService } from '../services/division.service';
 
 @Controller('division')
-export class ControllersController {
+export class DivisionController {
 
-    constructor(private readonly divisionsService: ServicesService) {}
+    constructor(private readonly divisionsService: DivisionService) {}
 
   @Get()
   async getAllDivisions(): Promise<Divisions[]> {

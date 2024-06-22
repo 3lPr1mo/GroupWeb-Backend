@@ -1,16 +1,14 @@
-import { Body, Controller, Delete, Get, InternalServerErrorException, NotFoundException, Param, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { ProductServices } from '../services/services.service';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { ProductServices } from '../services/product.service';
 import { Products } from '../entities/products.entity';
 import { CreateProduct } from '../dto/CreateProduct';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { existsSync } from 'fs';
-import { NotFoundError } from 'rxjs';
 
 @Controller('product')
-export class ControllersController {
+export class ProductController {
     constructor( 
         private readonly productService: ProductServices,
     ) {}
@@ -20,9 +18,25 @@ export class ControllersController {
         return await this.productService.getAllProducts();
     }
 
+    @Get('allcategory/:id')
+    async getProductsByCategory(@Param('id') id: number): Promise<Products[]> {
+        return await this.productService.getProductsByCategory(id);
+    }
+
+    @Get('alldivision/:id')
+    async getProductByDivision(@Param('id') id: number): Promise<Products[]> {
+        return await this.productService.getProductByDivision(id);
+    }
+
     @Get(':id')
     async getProduct(@Param('id') id: number) : Promise<Products> {
         return await this.productService.getProductById(id)
+    }
+
+    // this route doesn't work without the param 'var', don't know why, but it works when I put it
+    @Get('division/:var')
+    async getLastProductByDivision(): Promise<Products[]> {
+        return await this.productService.getLastProductsByDivision()
     }
 
     @Get(':id/image')
@@ -32,7 +46,7 @@ export class ControllersController {
             if(!productWithImage){
                 return res.status(404).send('Product not found')
             }
-            const {product, imageStream} = productWithImage;
+            const { imageStream } = productWithImage;
             res.setHeader('Content-Type', 'image/png')
             imageStream.pipe(res)
         } catch(error) {
@@ -43,7 +57,7 @@ export class ControllersController {
     @Post()
     @UseInterceptors(FileInterceptor('image',{
         storage: diskStorage({
-            destination: 'dist/uploads',
+            destination: './uploads',
             filename: (req, file, callback) => {
                 const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 19);
                 const ext = extname(file.originalname);

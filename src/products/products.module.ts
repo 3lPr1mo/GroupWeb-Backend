@@ -1,16 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ControllersController } from './controllers/controllers.controller';
-import { ProductServices } from './services/services.service';
+import { ProductServices } from './services/product.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Products } from './entities/products.entity';
 import { Category } from 'src/category/entities/category.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { Divisions } from 'src/divisions/entities/divisions.entity';
+import { ProductController } from './controllers/products.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Products, Category]), 
+    TypeOrmModule.forFeature([Products, Category, Divisions]), 
     MulterModule.register({
       dest: './dist/uploads', // Ruta relativa a la carpeta dist
       storage: diskStorage({
@@ -25,7 +26,7 @@ import { extname } from 'path';
       })
     })
   ],
-  controllers: [ControllersController],
+  controllers: [ProductController],
   providers: [ProductServices],
 })
 export class ProductsModule {}

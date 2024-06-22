@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Category } from '../entities/category.entity';
-import { ServicesService } from '../services/services.service';
 import { CreateCategory } from '../dto/CreateCategory';
 import { UpdateResult } from 'typeorm';
+import { CategoryService } from '../services/category.service';
 
 @Controller('category')
-export class ControllersController {
-    constructor(private readonly categoryService: ServicesService) {}
+export class CategoryController {
+    constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
   async getAllCategories(): Promise<Category[]> {
