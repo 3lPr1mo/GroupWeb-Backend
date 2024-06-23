@@ -7,6 +7,7 @@ import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
+import { AuthGuardCustom } from 'src/auth/guards/auth.guard';
 
 @Controller('product')
 export class ProductController {
@@ -27,6 +28,12 @@ export class ProductController {
     @Get('alldivision/:id')
     async getProductByDivision(@Param('id') id: number): Promise<Products[]> {
         return await this.productService.getProductByDivision(id);
+    }
+
+    @Get('user/:id/division/:divisionId')
+    @UseGuards(AuthGuardCustom)
+    async getProductByUserId(@Param('id') id: number, @Param('divisionId') divisionId: number): Promise<Products[]>{
+        return await this.productService.getProductsByUserId(id, divisionId);
     }
 
     @Get(':id')
@@ -59,7 +66,7 @@ export class ProductController {
     @UseGuards(AuthGuard())
     @UseInterceptors(FileInterceptor('image',{
         storage: diskStorage({
-            destination: './uploads',
+            destination: 'dist/uploads',
             filename: (req, file, callback) => {
                 const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 19);
                 const ext = extname(file.originalname);

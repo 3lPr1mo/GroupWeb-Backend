@@ -1,6 +1,5 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { ServicesService } from 'src/users/services/services.service';
 

@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { AuthGuardCustom } from './guards/auth.guard';
 import { ServicesService } from 'src/users/services/services.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [

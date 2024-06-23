@@ -3,7 +3,7 @@ import { Category } from '../entities/category.entity';
 import { CreateCategory } from '../dto/CreateCategory';
 import { UpdateResult } from 'typeorm';
 import { CategoryService } from '../services/category.service';
-import { AuthGuard } from '@nestjs/passport';
+import { AuthGuardCustom } from 'src/auth/guards/auth.guard';
 
 @Controller('category')
 export class CategoryController {
@@ -19,14 +19,20 @@ export class CategoryController {
     return await this.categoryService.getCategoryById(id);
   }
 
+  @Get('/user/:id/division/:divId')
+  @UseGuards(AuthGuardCustom)
+  async getCategoryByUserAndDivision(@Param('id') id: number, @Param('divId') divId: number): Promise<Category[]> {
+    return await this.categoryService.getCategoryByUserAndDivision(id, divId)
+  }
+
   @Post()
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuardCustom)
   async createCategory(@Body() categoryData: CreateCategory): Promise<Category> {
     return await this.categoryService.createCategory(categoryData);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuardCustom)
   async updateCategory(
     @Param('id') id: number,
     @Body() categoryData: CreateCategory,
@@ -35,7 +41,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuardCustom)
   async deleteCategory(@Param('id') id: number): Promise<void> {
     await this.categoryService.deleteCategory(id);
   }

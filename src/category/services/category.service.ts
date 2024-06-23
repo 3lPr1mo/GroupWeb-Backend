@@ -20,6 +20,10 @@ export class CategoryService {
       async getAllCategories(): Promise<Category[]> {
         return await this.categoryRepository.find({ relations: ['division', 'user'] });
       }
+
+      async getCategoryByUserAndDivision(userId: number, divisionId: number): Promise<Category[]> {
+        return await this.categoryRepository.find({where: {user: {id: userId}, division: {id: divisionId}}, relations:['division']});
+      }
     
       async getCategoryById(id: number): Promise<Category> {
         return await this.categoryRepository.findOne({where: {id},  relations: ['division', 'user'] });

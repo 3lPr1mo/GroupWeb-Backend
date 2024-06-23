@@ -38,6 +38,10 @@ export class ProductServices {
         return await this.productRepository.find({where: {category: {division: {id}}}, order:{id: "DESC"}})
     }
 
+    async getProductsByUserId(id: number, divisionId: number): Promise<Products[]> {
+        return await this.productRepository.find({where:{category:{user: {id}, division: {id: divisionId}}}, order:{id: "DESC"}, relations:['category.division']});
+    }
+
     async getLastProductsByDivision(): Promise<Products[]> {
         const techProducts = await this.productRepository.find({where: {category: {division: {id: 1}}}, order: {id: "DESC"}, take: 2});
         const fincaProducts = await this.productRepository.find({where: {category: {division: {id: 2}}}, order: {id: "DESC"}, take: 1});

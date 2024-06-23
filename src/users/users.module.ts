@@ -8,6 +8,7 @@ import { AuthGuardCustom } from 'src/auth/guards/auth.guard';
 @Module({
   imports: [TypeOrmModule.forFeature([User]), AuthModule],
   providers: [ServicesService],
+  exports: [ServicesService],
   controllers: [ControllersController],
 })
 export class UsersModule {}
