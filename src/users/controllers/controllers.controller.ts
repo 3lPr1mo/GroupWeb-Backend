@@ -1,16 +1,20 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, UseGuards, Request } from '@nestjs/common';
 import { ServicesService } from '../services/services.service';
 import { User } from '../entities/users.entity';
 import { LoginUser } from '../dto/loginUser';
 import { Response } from 'express';
+import { AuthGuardCustom } from 'src/auth/guards/auth.guard';
 
 @Controller('user')
 export class ControllersController {
     constructor( private readonly userService: ServicesService ){}
 
     @Get()
-    async getAllUsers(): Promise<User[]>{
-        return await this.userService.getAllUsers();
+    @UseGuards(AuthGuardCustom)
+    async getAllUsers(@Request() req: Request): Promise<User[]>{
+        const user = req['user'];
+        return user;
+        //return await this.userService.getAllUsers();
     }
 
     @Get(':email')

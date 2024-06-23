@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProductServices } from '../services/product.service';
 import { Products } from '../entities/products.entity';
 import { CreateProduct } from '../dto/CreateProduct';
@@ -6,6 +6,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('product')
 export class ProductController {
@@ -55,6 +56,7 @@ export class ProductController {
     }
 
     @Post()
+    @UseGuards(AuthGuard())
     @UseInterceptors(FileInterceptor('image',{
         storage: diskStorage({
             destination: './uploads',
@@ -73,6 +75,7 @@ export class ProductController {
     }
 
     @Put(':id')
+    @UseGuards(AuthGuard())
     @UseInterceptors(FileInterceptor('image',{
         storage: diskStorage({
             destination: 'dist/uploads',
@@ -88,6 +91,7 @@ export class ProductController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard())
     async deleteProduct(@Param('id') id: number): Promise<void> {
         await this.productService.deletProduct(id);
     }

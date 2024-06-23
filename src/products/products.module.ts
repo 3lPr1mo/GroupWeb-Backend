@@ -8,9 +8,12 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Divisions } from 'src/divisions/entities/divisions.entity';
 import { ProductController } from './controllers/products.controller';
+import { AuthModule } from 'src/auth/auth.module';
+import { AuthGuardCustom } from 'src/auth/guards/auth.guard';
 
 @Module({
   imports: [
+    AuthModule,
     TypeOrmModule.forFeature([Products, Category, Divisions]), 
     MulterModule.register({
       dest: './dist/uploads', // Ruta relativa a la carpeta dist

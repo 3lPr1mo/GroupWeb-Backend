@@ -5,9 +5,11 @@ import { Divisions } from 'src/divisions/entities/divisions.entity';
 import { User } from 'src/users/entities/users.entity';
 import { CategoryController } from './controllers/category.controller';
 import { CategoryService } from './services/category.service';
+import { AuthModule } from 'src/auth/auth.module';
+import { AuthGuardCustom } from 'src/auth/guards/auth.guard';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category, Divisions, User])],
+  imports: [AuthModule, TypeOrmModule.forFeature([Category, Divisions, User])],
   controllers: [CategoryController],
   providers: [CategoryService]
 })

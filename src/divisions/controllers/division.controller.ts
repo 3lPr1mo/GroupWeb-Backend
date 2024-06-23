@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { Divisions } from '../entities/divisions.entity';
 import { DivisionService } from '../services/division.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('division')
 export class DivisionController {
@@ -18,11 +19,13 @@ export class DivisionController {
   }
 
   @Post()
+  @UseGuards(AuthGuard())
   async createDivision(@Body() divisionData: Partial<Divisions>): Promise<Divisions> {
     return await this.divisionsService.createDivision(divisionData);
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard())
   async updateDivision(
     @Param('id') id: number,
     @Body() divisionData: Partial<Divisions>,
@@ -31,6 +34,7 @@ export class DivisionController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard())
   async deleteDivision(@Param('id') id: number): Promise<void> {
     await this.divisionsService.deleteDivision(id);
   }
