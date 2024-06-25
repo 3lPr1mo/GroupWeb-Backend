@@ -19,6 +19,11 @@ export class CategoryController {
     return await this.categoryService.getCategoryById(id);
   }
 
+  @Get('division/:id')
+  async getCategoriesByDivision(@Param('id') id: number) : Promise<Category[]> {
+    return await this.categoryService.getCategoriesByDivision(id);
+  }
+
   @Get('/user/:id/division/:divId')
   @UseGuards(AuthGuardCustom)
   async getCategoryByUserAndDivision(@Param('id') id: number, @Param('divId') divId: number): Promise<Category[]> {

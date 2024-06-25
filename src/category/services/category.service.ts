@@ -28,6 +28,10 @@ export class CategoryService {
       async getCategoryById(id: number): Promise<Category> {
         return await this.categoryRepository.findOne({where: {id},  relations: ['division', 'user'] });
       }
+
+      async getCategoriesByDivision(id: number): Promise<Category[]>{
+        return await this.categoryRepository.find({where: {division: {id}}});
+      }
     
       async createCategory(categoryData: CreateCategory): Promise<Category> {
         const {name, divisionId, userId} = categoryData;

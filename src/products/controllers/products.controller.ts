@@ -36,6 +36,11 @@ export class ProductController {
         return await this.productService.getProductsByUserId(id, divisionId);
     }
 
+    @Get('division/:id')
+    async getCategoryProductByDivision(@Param('id') id: number): Promise<Products[]>{
+        return await this.productService.getCategoryProductByDivision(id);
+    }
+
     @Get(':id')
     async getProduct(@Param('id') id: number) : Promise<Products> {
         return await this.productService.getProductById(id)
@@ -94,12 +99,14 @@ export class ProductController {
         })
     }))
     async updateProduct(@Param('id') id: number, @Body() productData: CreateProduct, @UploadedFile() file: Express.Multer.File): Promise<Products>{
+        console.log(productData)
         return await this.productService.updateProduct(id, productData, file);
     }
 
     @Delete(':id')
     @UseGuards(AuthGuard())
     async deleteProduct(@Param('id') id: number): Promise<void> {
-        await this.productService.deletProduct(id);
+        console.log(id);
+        return await this.productService.deletProduct(id);
     }
 }

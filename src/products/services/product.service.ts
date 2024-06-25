@@ -39,7 +39,11 @@ export class ProductServices {
     }
 
     async getProductsByUserId(id: number, divisionId: number): Promise<Products[]> {
-        return await this.productRepository.find({where:{category:{user: {id}, division: {id: divisionId}}}, order:{id: "DESC"}, relations:['category.division']});
+        return await this.productRepository.find({where:{category:{user: {id}, division: {id: divisionId}}}, order:{id: "ASC"}, relations:['category.division']});
+    }
+
+    async getCategoryProductByDivision(id: number): Promise<Products[]> {
+        return await this.productRepository.find({where:{category:{division: {id}}}, order:{id: "DESC"}, relations:['category.division']});
     }
 
     async getLastProductsByDivision(): Promise<Products[]> {
