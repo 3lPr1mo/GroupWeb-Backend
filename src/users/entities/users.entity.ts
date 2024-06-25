@@ -13,4 +13,6 @@ export class User {
   name: string;
   @OneToMany(() => Category, (category) => category.user)
   category: Category[];
+  @Column({type: 'varchar', length: 100})
+  phone: string;
 }
