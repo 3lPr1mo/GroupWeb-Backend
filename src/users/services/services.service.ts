@@ -70,6 +70,9 @@ export class ServicesService {
             throw new BadRequestException('Email no valido');
         }
         Object.assign(user, userData)
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+        user.password = hashedPassword;
         await this.userRepository.save(user);
     }
 }
