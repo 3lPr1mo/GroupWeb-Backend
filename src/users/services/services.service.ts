@@ -1,9 +1,10 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/users.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
 import { LoginUser } from '../dto/loginUser';
+import { ChangeUserRequest } from '../dto/ChangeUserRequest';
 
 @Injectable()
 export class ServicesService {
@@ -60,5 +61,15 @@ export class ServicesService {
 
     async deleteUser(id: number): Promise<void>{
         await this.userRepository.delete(id)
+    }
+
+    async updatePassword(userData: ChangeUserRequest): Promise<void> {
+        const {email, password} = userData;
+        const user = await this.userRepository.findOneBy({email});
+        if (!user) {
+            throw new BadRequestException('Email no valido');
+        }
+        Object.assign(user, userData)
+        await this.userRepository.save(user);
     }
 }

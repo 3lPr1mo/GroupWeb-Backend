@@ -4,6 +4,7 @@ import { User } from '../entities/users.entity';
 import { LoginUser } from '../dto/loginUser';
 import { Response } from 'express';
 import { AuthGuardCustom } from 'src/auth/guards/auth.guard';
+import { ChangeUserRequest } from '../dto/ChangeUserRequest';
 
 @Controller('user')
 export class ControllersController {
@@ -47,6 +48,11 @@ export class ControllersController {
     @Put(':id')
     async updateUser(@Param('id') id: number, @Body() userData: Partial<User>): Promise<User> {
         return await this.userService.updateUser(id, userData);
+    }
+
+    @Put('update/user')
+    async updatePassword(@Body() userData: ChangeUserRequest): Promise<void> {
+        return await this.userService.updatePassword(userData);
     }
 
     @Delete(':id')
